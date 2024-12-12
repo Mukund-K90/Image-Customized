@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Customizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+        integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .container {
+            max-width: 70%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .preview-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 12/9;
+            background: #f5f5f5;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .size-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .size-btn {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .size-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+
+        .image-container {
+            position: relative;
+            display: flex;
+            aspect-ratio: 12 / 9;
+            width: 80%;
+            height: 80%;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #eaeaea;
+            border: 2px dashed #ccc;
+            border-radius: 0;
+        }
+
+        .image-container.default::before {
+            content: '\f03e';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 36px;
+            color: #bbb;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .preview-image {
+            position: absolute;
+            cursor: move;
+            max-width: none;
+            display: none;
+            transform-origin: center;
+        }
+
+        .shape-options {
+            margin-top: 5%;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .shape-btn {
+            width: 30px;
+            height: 25px;
+            background: #C1995D;
+            border: none;
+            cursor: pointer;
+            box-shadow: 1px 1px 5px #808080;
+        }
+
+
+        .shape-btn.circle {
+            border-radius: 50%;
+        }
+
+        .shape-btn.square {
+            border-radius: 0;
+        }
+
+        .shape-btn.rect {
+            border-radius: 5%;
+            height: 20px;
+        }
+
+
+        .shape-btn.oval {
+            border-radius: 50%;
+            height: 30px;
+        }
+
+        .border-colors {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 20px;
+            font-size: 15px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .upload-btn {
+            background: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .size-indicator {
+            position: absolute;
+            background: black;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .width-indicator {
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .height-indicator {
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        .circle-shape {
+            border-radius: 50%;
+        }
+
+        .square-shape {
+            height: 80%;
+            width: 60%;
+        }
+
+        .oval-shape {
+            border-radius: 50%;
+            height: 75%;
+        }
+
+        .custom-shape {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+
+        .rect-shape {
+            border-radius: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="preview-container">
+            <div class="size-indicator width-indicator">Width 48 inch (121.92 cm)</div>
+            <div class="size-indicator height-indicator">Height 36 inch (91.44 cm)</div>
+
+            <div class="image-container" id="imageContainer">
+                <img class="preview-image" id="previewImage" style="display: none;">
+            </div>
+
+            <div class="shape-options">
+                <button class="shape-btn square" data-shape="square"></button>
+                <button class="shape-btn rect" data-shape="rect"></button>
+                <button class="shape-btn circle" data-shape="circle"></button>
+                <button class="shape-btn oval" data-shape="oval"></button>
+                <button class="shape-btn" style="border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;"
+                    data-shape="custom"></button>
+            </div>
+
+            <div class="border-colors">
+                <button class="color-btn" style="border: none;">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+                <button class="color-btn" style="border: 5px solid #000000; ">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+                <button class="color-btn" style="border: 5px solid #E21E23; ">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+                <button class="color-btn" style=" border: 5px solid #FF5722; ">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+                <button class="color-btn" style="border: 5px solid #FFEB3B; ">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+                <button class="color-btn" style=" border: 5px solid #AE4A84; ">
+                    <i class="fa-solid fa-image"></i>
+                </button>
+
+            </div>
+        </div>
+        <div class="controls">
+            <input type="file" id="fileInput" accept="image/*">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Select Photo</button>
+            <button class="upload-btn" onclick="adjustZoom(1.1)">Zoom In</button>
+            <button class="upload-btn" onclick="adjustZoom(0.9)">Zoom Out</button>
+            <button class="upload-btn" id="downloadBtn">Download</button>
+        </div>
+        <div class="size-buttons">
+            <button class="size-btn" data-ratio="12/9">12x9</button>
+            <button class="size-btn" data-ratio="11/11">11x11</button>
+            <button class="size-btn" data-ratio="16/12">16x12</button>
+            <button class="size-btn" data-ratio="16/16">16x16</button>
+            <button class="size-btn" data-ratio="21/15">21x15</button>
+            <button class="size-btn" data-ratio="35/23">35x23</button>
+            <button class="size-btn" data-ratio="48/36">48x36</button>
+        </div>
+    </div>
+
+    <script>
+        const imageContainer = document.getElementById('imageContainer');
+        const previewImage = document.getElementById('previewImage');
+        const fileInput = document.getElementById('fileInput');
+
+        let isDragging = false;
+        let currentX = 0;
+        let currentY = 0;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+        let scale = 1;
+
+        // Image upload handling
+        fileInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    centerImage();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.querySelectorAll('.shape-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const shape = this.dataset.shape;
+                const imageContainer = document.querySelector('.image-container');
+
+                imageContainer.classList.remove('circle-shape', 'square-shape', 'oval-shape', 'custom-shape', 'rect-shape');
+
+                switch (shape) {
+                    case 'circle':
+                        imageContainer.classList.add('circle-shape');
+                        break;
+                    case 'square':
+                        imageContainer.classList.add('square-shape');
+                        break;
+                    case 'oval':
+                        imageContainer.classList.add('oval-shape');
+                        break;
+                    case 'custom':
+                        imageContainer.classList.add('custom-shape');
+                        break;
+                    case 'rect':
+                        imageContainer.classList.add('rect-shape');
+                        break;
+                }
+            });
+        });
+
+
+        // Border color changing
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                imageContainer.style.border = `${this.style.border}`;
+            });
+        });
+
+
+        imageContainer.addEventListener('mouse', dragStart);
+        imageContainer.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+
+        function dragStart(e) {
+            if (e.type === 'touchstart') {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+
+            if (e.target === previewImage) {
+                isDragging = true;
+            }
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+
+                if (e.type === 'touchmove') {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+
+                xOffset = currentX;
+                yOffset = currentY;
+                updateImagePosition();
+            }
+        }
+
+        function dragEnd() {
+            isDragging = false;
+        }
+
+        function updateImagePosition() {
+            previewImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
+        }
+
+        function adjustZoom(factor) {
+            scale *= factor;
+            scale = Math.min(Math.max(0.5, scale), 3);
+            updateImagePosition();
+        }
+
+        function centerImage() {
+            previewImage.onload = function () {
+                const containerRect = imageContainer.getBoundingClientRect();
+                const imageRect = previewImage.getBoundingClientRect();
+
+                currentX = (containerRect.width - imageRect.width) / 2;
+                currentY = (containerRect.height - imageRect.height) / 2;
+                xOffset = currentX;
+                yOffset = currentY;
+
+                updateImagePosition();
+            }
+        }
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        downloadBtn.addEventListener('click', () => {
+            html2canvas(imageContainer, { backgroundColor: null }).then((canvas) => {
+                const link = document.createElement('a');
+                link.download = 'customized-image.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                console.log(`size ${this.dataset.ratio} `);
+                const ratio = this.dataset.ratio;
+                const imageContainer = document.getElementById('imageContainer');
+                imageContainer.style.aspectRatio = `${ratio}`;
+                console.log(imageContainer.style.aspectRatio);
+
+
+            });
+        });
+
+    </script>
+</body>
+
+</html>
