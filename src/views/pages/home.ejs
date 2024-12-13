@@ -54,12 +54,26 @@
             position: relative;
             display: flex;
             justify-content: center;
+            /* Center the image horizontally */
             align-items: center;
-            overflow: hidden;
+            /* Center the image vertically */
             background-color: #eaeaea;
             border: 2px solid #ccc;
             border-radius: 0;
+            overflow: hidden;
+            /* Hide any overflow */
         }
+
+        .preview-image {
+            max-width: 100%;
+            /* Ensure the image scales within the container */
+            max-height: 100%;
+            /* Ensure the image scales within the container */
+            object-fit: contain;
+            /* Ensure the aspect ratio is maintained */
+        }
+
+
 
         .image-container.default::before {
             content: '\f03e';
@@ -75,12 +89,6 @@
             width: 100%;
         }
 
-        .preview-image {
-            position: absolute;
-            cursor: move;
-            max-width: none;
-            transform-origin: center;
-        }
 
         .shape-options {
             margin-top: 5%;
@@ -258,7 +266,7 @@
             <div class="size-indicator height-indicator">Height 36 inch (91.44 cm)</div> -->
 
             <div class="image-container square-shape" id="imageContainer">
-                <img class="preview-image" id="previewImage" style="border: 5px solid white;"
+                <img class="preview-image" id="previewImage"
                     src="https://images.unsplash.com/photo-1733287733098-11492d9920f7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
             </div>
 
@@ -299,7 +307,7 @@
                     class="fa-solid fa-upload"></i></button>
             <!-- <button class="upload-btn" onclick="adjustZoom(1.1)">Zoom In</button>
             <button class="upload-btn" onclick="adjustZoom(0.9)">Zoom Out</button> -->
-            <input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="1" style="width: 200px;">
+            <input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="0" style="width: 200px;">
             <button class="upload-btn download" id="downloadBtn"><i class="fa-solid fa-download"></i></button>
             <p>Size:</p>
             <button class="size-btn" data-ratio="12/9">12x9</button>
@@ -334,7 +342,7 @@
                 reader.onload = function (e) {
                     previewImage.src = e.target.result;
                     previewImage.style.display = 'block';
-                    previewImage.style.transform = 'translate(0px, 0px) scale(1)'; 
+                    previewImage.style.transform = 'translate(0px, 0px) scale(1)';
                     centerImage(); // Center the image
                 };
                 reader.readAsDataURL(file);
@@ -382,7 +390,6 @@
             });
         });
 
-        // Border color changing
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 imageContainer.style.border = `${this.style.border}`;
@@ -524,7 +531,6 @@
                 throw new Error(`${response.status}: ${response.statusText}`);
             }
         }
-
 
         removeBgBtn.addEventListener('click', async () => {
             const imageBlob = await fetch(previewImage.src)
