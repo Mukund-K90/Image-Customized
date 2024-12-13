@@ -14,17 +14,18 @@
             max-width: 70%;
             margin: 0 auto;
             padding: 20px;
+            height: auto;
         }
 
         .preview-container {
             position: relative;
             width: 100%;
-            aspect-ratio: 12/9;
             background: #f5f5f5;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 6% 0 6% 0;
         }
 
         .size-buttons {
@@ -46,11 +47,10 @@
 
 
         .image-container {
+            width: 600px;
+            height: 450px;
             position: relative;
             display: flex;
-            aspect-ratio: 12 / 9;
-            width: 80%;
-            height: 80%;
             justify-content: center;
             align-items: center;
             overflow: hidden;
@@ -58,6 +58,8 @@
             border: 2px dashed #ccc;
             border-radius: 0;
         }
+
+
 
         .image-container.default::before {
             content: '\f03e';
@@ -105,6 +107,7 @@
 
         .shape-btn.circle {
             border-radius: 50%;
+            height: 30px;
         }
 
         .shape-btn.square {
@@ -119,7 +122,7 @@
 
         .shape-btn.oval {
             border-radius: 50%;
-            height: 30px;
+            height: 20px;
         }
 
         .border-colors {
@@ -187,24 +190,35 @@
 
         .circle-shape {
             border-radius: 50%;
+            width: 400px;
+            height: 400px;
         }
 
         .square-shape {
-            height: 80%;
-            width: 60%;
+            height: 400px;
+            width: 400px;
         }
 
         .oval-shape {
             border-radius: 50%;
-            height: 75%;
+            height: 400px;
+            width: 500px;
         }
 
         .custom-shape {
             border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            height: 400px;
+            width: 400px;
         }
 
         .rect-shape {
             border-radius: 5%;
+            width: 500px;
+            height: 300px;
+        }
+
+        .shape-btn.active {
+            outline: 2px solid #000;
         }
     </style>
 </head>
@@ -212,10 +226,10 @@
 <body>
     <div class="container">
         <div class="preview-container">
-            <div class="size-indicator width-indicator">Width 48 inch (121.92 cm)</div>
-            <div class="size-indicator height-indicator">Height 36 inch (91.44 cm)</div>
+            <!-- <div class="size-indicator width-indicator">Width 48 inch (121.92 cm)</div>
+            <div class="size-indicator height-indicator">Height 36 inch (91.44 cm)</div> -->
 
-            <div class="image-container" id="imageContainer">
+            <div class="image-container square-shape" id="imageContainer">
                 <img class="preview-image" id="previewImage" style="display: none;">
             </div>
 
@@ -323,7 +337,6 @@
             });
         });
 
-
         // Border color changing
         document.querySelectorAll('.color-btn').forEach(btn => {
             btn.addEventListener('click', function () {
@@ -331,28 +344,27 @@
             });
         });
 
-
-        imageContainer.addEventListener('mouse', dragStart);
+        imageContainer.addEventListener('dblclick', dragStart);
         imageContainer.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', dragEnd);
 
         function dragStart(e) {
-            if (e.type === 'touchstart') {
-                initialX = e.touches[0].clientX - xOffset;
-                initialY = e.touches[0].clientY - yOffset;
-            } else {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-            }
-
-            if (e.target === previewImage) {
+            if (!isDragging) {
                 isDragging = true;
+
+                if (e.type === 'touchstart') {
+                    initialX = e.touches[0].clientX - xOffset;
+                    initialY = e.touches[0].clientY - yOffset;
+                } else {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+                }
             }
         }
 
         function drag(e) {
             if (isDragging) {
-                e.preventDefault();
+                e.preventDefault(); 
 
                 if (e.type === 'touchmove') {
                     currentX = e.touches[0].clientX - initialX;
@@ -364,14 +376,16 @@
 
                 xOffset = currentX;
                 yOffset = currentY;
+
                 updateImagePosition();
             }
         }
 
         function dragEnd() {
-            isDragging = false;
+            if (isDragging) {
+                isDragging = false; 
+            }
         }
-
         function updateImagePosition() {
             previewImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
         }
@@ -395,6 +409,7 @@
                 updateImagePosition();
             }
         }
+
         const downloadBtn = document.getElementById('downloadBtn');
 
         downloadBtn.addEventListener('click', () => {
@@ -405,15 +420,35 @@
                 link.click();
             });
         });
+
         document.querySelectorAll('.size-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                console.log(`size ${this.dataset.ratio} `);
-                const ratio = this.dataset.ratio;
-                const imageContainer = document.getElementById('imageContainer');
-                imageContainer.style.aspectRatio = `${ratio}`;
-                console.log(imageContainer.style.aspectRatio);
+                const ratio = this.dataset.ratio.split('/');
+                const aspectWidth = parseFloat(ratio[0]);
+                const aspectHeight = parseFloat(ratio[1]);
 
+                let width = 600;
+                let height = (600 * aspectHeight) / aspectWidth;
 
+                const imageContainer = document.querySelector('.image-container');
+
+                imageContainer.style.width = `${Math.round(width)}px`;
+                imageContainer.style.height = `${Math.round(height)}px`;
+
+                document.querySelectorAll('.circle-shape, .square-shape, .oval-shape, .custom-shape, .rect-shape').forEach(shape => {
+                    if (shape.classList.contains('circle-shape')) {
+                        shape.style.width = `${Math.round(height)}px`;
+                        shape.style.height = `${Math.round(height)}px`;
+                    }
+                    else if (shape.classList.contains('rect-shape')) {
+                        shape.style.width = `${Math.round(width)}px`;
+                        shape.style.height = `${Math.round(width) - 100}px`;
+                    }
+                    else {
+                        shape.style.width = `${Math.round(width)}px`;
+                        shape.style.height = `${Math.round(height)}px`;
+                    }
+                });
             });
         });
 
