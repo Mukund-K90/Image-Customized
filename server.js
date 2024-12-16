@@ -18,11 +18,11 @@ app.get('/', (req, res) => {
 })
 app.use(bodyParser.json({ limit: "10mb" }));
 
-async function removeBg(base64Image, backgroundUrl) {
+async function removeBg(imageBlob, backgroundUrl) {
 
     const formData = new URLSearchParams();
     formData.append("size", "auto");
-    formData.append("image_file_b64", base64Image);
+    formData.append("image_file_b64", imageBlob);
     formData.append("bg_image_url", backgroundUrl)
 
     const response = await fetch("https://api.remove.bg/v1.0/removebg", {
