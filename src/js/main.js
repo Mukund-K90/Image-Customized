@@ -268,3 +268,59 @@ async function changeBackgroundAPI(backgroundUrl, originalImageUrl) {
     };
     reader.readAsDataURL(imageBlob);
 }
+
+
+document.getElementById('addTextBtn').addEventListener('click', function () {
+    document.getElementById('textModal').style.display = 'block';
+});
+
+function closeTextModal() {
+    document.getElementById('textModal').style.display = 'none';
+}
+
+document.getElementById('addTextModalBtn').addEventListener('click', function () {
+    const text = document.getElementById('modalTextInput').value;
+    const textColor = document.getElementById('textColor').value;
+    const fontStyle = document.getElementById('fontStyleSelect').value;
+
+    if (text.trim() !== '') {
+        const textBox = document.createElement('div');
+        textBox.id = 'textBox';
+        textBox.innerText = text;
+        textBox.style.position = 'absolute';
+        textBox.style.fontFamily = fontStyle;
+        textBox.style.color = textColor;
+        textBox.style.fontSize = '24px';
+        textBox.style.top = '50%';
+        textBox.style.left = '50%';
+        textBox.style.transform = 'translate(-50%, -50%)';
+        document.getElementById('imageContainer').appendChild(textBox);
+        textBox.style.display = 'block';
+        makeDraggable(textBox);
+    }
+
+    closeTextModal();
+});
+
+function makeDraggable(element) {
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    element.addEventListener('mousedown', function (e) {
+        isDragging = true;
+        offsetX = e.clientX - element.offsetLeft;
+        offsetY = e.clientY - element.offsetTop;
+    });
+
+    document.addEventListener('mousemove', function (e) {
+        if (isDragging) {
+            element.style.left = e.clientX - offsetX + 'px';
+            element.style.top = e.clientY - offsetY + 'px';
+        }
+    });
+
+    document.addEventListener('mouseup', function () {
+        isDragging = false;
+    });
+}
+

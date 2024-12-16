@@ -301,3 +301,17 @@
     font-weight: bold;
     color: #f0f0f0;
 }
+
+
+#addTextBtn {
+    background: #2F4858;
+    font-size: 20px;
+    border: 1px solid #f0f0f0;
+}
+
+#addTextBtn:hover {
+    background: #f0f0f0;
+    font-size: 20px;
+    color: #2F4858;
+    border: 1px solid #2F4858;
+}
