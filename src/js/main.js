@@ -3,7 +3,14 @@ const backgroundUrls = [
     "https://static.remove.bg/backgrounds/person/Nature/background-clouds-colors-726330-size-156.jpg",
     "https://static.remove.bg/backgrounds/product/antique-backdrop-background-164005-size-156.jpg",
     "https://static.remove.bg/backgrounds/car/new/bg3-size-156.png",
-    "https://static.remove.bg/backgrounds/realestate/background-3104413_1920-size-156.jpg"
+    "https://static.remove.bg/backgrounds/realestate/background-3104413_1920-size-156.jpg",
+    "https://static.remove.bg/backgrounds/person/Autumn/dawn-desktop-wallpaper-environment-2055389-size-156.jpg",
+    "https://static.remove.bg/backgrounds/person/Urban/architecture-building-business-2339009-size-156.jpg",
+    "https://static.remove.bg/backgrounds/person/new/pride_gradient-size-156.png",
+    "https://static.remove.bg/backgrounds/realestate/pexels-pixabay-531756-size-156.jpg",
+    "https://static.remove.bg/backgrounds/person/new/pexels-zaksheuskaya-1561020-size-156.jpg",
+    "https://i.pinimg.com/736x/d0/09/52/d00952ba351f7b7f0905a4a9465b6fc8.jpg",
+    "https://i.pinimg.com/736x/33/92/a6/3392a60bb7a4c4ec72f8bef181a9f556.jpg"
 ];
 const imageContainer = document.getElementById('imageContainer');
 const previewImage = document.getElementById('previewImage');
@@ -28,23 +35,11 @@ fileInput.addEventListener('change', function (e) {
             previewImage.src = e.target.result;
             previewImage.style.display = 'block';
             previewImage.style.transform = 'translate(0px, 0px) scale(1)';
-            centerImage();
         };
         reader.readAsDataURL(file);
     }
 });
 
-function centerImage() {
-    previewImage.onload = function () {
-        const containerRect = imageContainer.getBoundingClientRect();
-        const imageRect = previewImage.getBoundingClientRect();
-
-        const currentX = (containerRect.width - imageRect.width) / 2;
-        const currentY = (containerRect.height - imageRect.height) / 2;
-
-        previewImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(1)`;
-    };
-}
 
 document.querySelectorAll('.shape-btn').forEach(btn => {
     btn.addEventListener('click', function () {
@@ -53,25 +48,12 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
         const shape = this.dataset.shape;
         const imageContainer = document.querySelector('.image-container');
 
-        imageContainer.classList.remove('circle-shape', 'square-shape', 'oval-shape', 'custom-shape', 'rect-shape');
+        imageContainer.classList.remove('circle-shape', 'square-shape', 'oval-shape', 'rect-shape', 'potrait-shape', 'custom-shape', 'custom2-shape', 'custom3-shape', 'custom4-shape', 'custom5-shape', 'custom6-shape');
 
-        switch (shape) {
-            case 'circle':
-                imageContainer.classList.add('circle-shape');
-                break;
-            case 'square':
-                imageContainer.classList.add('square-shape');
-                break;
-            case 'oval':
-                imageContainer.classList.add('oval-shape');
-                break;
-            case 'custom':
-                imageContainer.classList.add('custom-shape');
-                break;
-            case 'rect':
-                imageContainer.classList.add('rect-shape');
-                break;
+        if (shape) {
+            imageContainer.classList.add(`${shape}-shape`)
         }
+
     });
 });
 
@@ -140,20 +122,6 @@ function updateImagePosition() {
     previewImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
 }
 
-function centerImage() {
-    previewImage.onload = function () {
-        const containerRect = imageContainer.getBoundingClientRect();
-        const imageRect = previewImage.getBoundingClientRect();
-
-        currentX = (containerRect.width - imageRect.width) / 2;
-        currentY = (containerRect.height - imageRect.height) / 2;
-        xOffset = currentX;
-        yOffset = currentY;
-
-        updateImagePosition();
-    }
-}
-
 const downloadBtn = document.getElementById('downloadBtn');
 
 downloadBtn.addEventListener('click', () => {
@@ -169,14 +137,17 @@ document.querySelectorAll('.size-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         document.querySelectorAll('.size-btn').forEach(button => button.classList.remove('active'));
         this.classList.add('active');
+
         const ratio = this.dataset.ratio.split('/');
         const aspectWidth = parseFloat(ratio[0]);
         const aspectHeight = parseFloat(ratio[1]);
 
-        let width = 600;
-        let height = (600 * aspectHeight) / aspectWidth;
+        let width = 400;
+        let height = (400 * aspectHeight) / aspectWidth;
 
         const imageContainer = document.querySelector('.image-container');
+        const widthInd = document.getElementById('width');
+        const heightInd = document.getElementById('height');
 
         imageContainer.style.width = `${Math.round(width)}px`;
         imageContainer.style.height = `${Math.round(height)}px`;
@@ -187,18 +158,36 @@ document.querySelectorAll('.size-btn').forEach(btn => {
             if (shape.classList.contains('circle-shape')) {
                 shape.style.width = `${Math.round(height)}px`;
                 shape.style.height = `${Math.round(height)}px`;
-            }
-            else if (shape.classList.contains('rect-shape')) {
+            } else if (shape.classList.contains('rect-shape')) {
                 shape.style.width = `${Math.round(width)}px`;
                 shape.style.height = `${Math.round(width) - 100}px`;
-            }
-            else {
+            } else {
                 shape.style.width = `${Math.round(width)}px`;
                 shape.style.height = `${Math.round(height)}px`;
             }
         });
+
+        if (aspectWidth === 11 && aspectHeight === 11 || aspectWidth === 16 && aspectHeight === 16) {
+            document.querySelectorAll('.shape-btn').forEach(button => {
+                if (button.classList.contains('oval') || button.classList.contains('rect') || button.classList.contains('potrait')) {
+                    button.style.display = 'none';
+                } else {
+                    button.style.display = 'inline-block';
+                }
+            });
+        } else {
+            document.querySelectorAll('.shape-btn').forEach(button => {
+                if (button.classList.contains('potrait') || button.classList.contains('rect') || button.classList.contains('circle') || button.classList.contains('custom3') || button.classList.contains('custom4') || button.classList.contains('custom5')) {
+                    button.style.display = 'none';
+                } else {
+                    button.style.display = 'inline-block';
+                }
+            });
+        }
     });
 });
+
+
 const removeBgBtn = document.getElementById('removeBgBtn');
 removeBgBtn.addEventListener('click', openBgModal);
 
