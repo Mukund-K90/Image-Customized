@@ -25,7 +25,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8% 0 6% 0;
+            padding: 1.5rem;
             background-image: url(https://omgs.in/wp-content/uploads/2021/02/wall-c.jpg);
         }
 
@@ -54,23 +54,17 @@
             position: relative;
             display: flex;
             justify-content: center;
-            /* Center the image horizontally */
             align-items: center;
-            /* Center the image vertically */
             background-color: #eaeaea;
             border: 2px solid #ccc;
             border-radius: 0;
             overflow: hidden;
-            /* Hide any overflow */
         }
 
         .preview-image {
             max-width: 100%;
-            /* Ensure the image scales within the container */
             max-height: 100%;
-            /* Ensure the image scales within the container */
             object-fit: contain;
-            /* Ensure the aspect ratio is maintained */
         }
 
 
@@ -131,13 +125,12 @@
         }
 
         .border-colors {
-            position: absolute;
-            top: 10px;
             right: 10px;
             display: flex;
             gap: 10px;
             width: 100%;
             justify-content: center;
+            margin-bottom: 1rem;
         }
 
         .color-btn {
@@ -261,6 +254,26 @@
 
 <body>
     <div class="container">
+        <div class="border-colors">
+            <button class="color-btn" style="border: none;">
+                <i class="fa-regular fa-image"></i>
+            </button>
+            <button class="color-btn" style="border: 10px groove #000000; ">
+                <i class="fa-regular fa-image"></i>
+            </button>
+            <button class="color-btn" style="border: 10px groove #E21E23; ">
+                <i class="fa-regular fa-image"></i>
+            </button>
+            <button class="color-btn" style=" border: 10px groove #FF5722; ">
+                <i class="fa-regular fa-image"></i>
+            </button>
+            <button class="color-btn" style="border: 10px groove #FFEB3B; ">
+                <i class="fa-regular fa-image"></i>
+            </button>
+            <button class="color-btn" style=" border: 10px groove #AE4A84; ">
+                <i class="fa-regular fa-image"></i>
+            </button>
+        </div>
         <div class="preview-container">
             <!-- <div class="size-indicator width-indicator">Width 48 inch (121.92 cm)</div>
             <div class="size-indicator height-indicator">Height 36 inch (91.44 cm)</div> -->
@@ -278,28 +291,6 @@
                 <button class="shape-btn" style="border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;"
                     data-shape="custom"></button>
             </div>
-
-            <div class="border-colors">
-                <button class="color-btn" style="border: none;">
-                    <i class="fa-regular fa-image"></i>
-                </button>
-                <button class="color-btn" style="border: 10px groove #000000; ">
-                    <i class="fa-regular fa-image"></i>
-                </button>
-                <button class="color-btn" style="border: 10px groove #E21E23; ">
-                    <i class="fa-regular fa-image"></i>
-                </button>
-                <button class="color-btn" style=" border: 10px groove #FF5722; ">
-                    <i class="fa-regular fa-image"></i>
-                </button>
-                <button class="color-btn" style="border: 10px groove #FFEB3B; ">
-                    <i class="fa-regular fa-image"></i>
-                </button>
-                <button class="color-btn" style=" border: 10px groove #AE4A84; ">
-                    <i class="fa-regular fa-image"></i>
-                </button>
-
-            </div>
         </div>
         <div class="controls">
             <input type="file" id="fileInput" accept="image/*">
@@ -307,7 +298,7 @@
                     class="fa-solid fa-upload"></i></button>
             <!-- <button class="upload-btn" onclick="adjustZoom(1.1)">Zoom In</button>
             <button class="upload-btn" onclick="adjustZoom(0.9)">Zoom Out</button> -->
-            <input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="0" style="width: 200px;">
+            <input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="1" style="width: 200px;">
             <button class="upload-btn download" id="downloadBtn"><i class="fa-solid fa-download"></i></button>
             <p>Size:</p>
             <button class="size-btn" data-ratio="12/9">12x9</button>
@@ -317,12 +308,30 @@
             <button class="size-btn" data-ratio="21/15">21x15</button>
             <button class="size-btn" data-ratio="35/23">35x23</button>
             <button class="size-btn" data-ratio="48/36">48x36</button>
-            <button class="upload-btn" id="removeBgBtn">Remove Background</button>
+            <button class="upload-btn" id="removeBgBtn">Change Background</button>
 
+        </div>
+    </div>
+    <div id="bgModal"
+        style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);">
+        <div
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 10px;">
+            <h3>Select a Background</h3>
+            <div id="bgGallery" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <!-- Background images will be dynamically injected here -->
+            </div>
+            <button onclick="closeBgModal()">Close</button>
         </div>
     </div>
 
     <script>
+        const backgroundUrls = [
+            "https://static.remove.bg/backgrounds/product/art-artistic-background-1279813-size-156.jpg",
+            "https://static.remove.bg/backgrounds/person/Nature/background-clouds-colors-726330-size-156.jpg",
+            "https://static.remove.bg/backgrounds/product/antique-backdrop-background-164005-size-156.jpg",
+            "https://static.remove.bg/backgrounds/car/new/bg3-size-156.png",
+            "https://static.remove.bg/backgrounds/realestate/background-3104413_1920-size-156.jpg"
+        ];
         const imageContainer = document.getElementById('imageContainer');
         const previewImage = document.getElementById('previewImage');
         const fileInput = document.getElementById('fileInput');
@@ -513,40 +522,83 @@
             });
         });
         const removeBgBtn = document.getElementById('removeBgBtn');
+        removeBgBtn.addEventListener('click', openBgModal);
 
-        async function removeBg(blob) {
-            const formData = new FormData();
-            formData.append("size", "auto");
-            formData.append("image_file", blob);
+        function openBgModal() {
+            const bgGallery = document.getElementById('bgGallery');
+            bgGallery.innerHTML = '';
 
-            const response = await fetch("https://api.remove.bg/v1.0/removebg", {
-                method: "POST",
-                headers: { "X-Api-Key": "6Lu6WfjPB2PVE7rw3tu3JaR2" },
-                body: formData,
+            backgroundUrls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'Background Image';
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => selectBackground(url));
+                bgGallery.appendChild(img);
             });
 
-            if (response.ok) {
-                return await response.arrayBuffer();
-            } else {
-                throw new Error(`${response.status}: ${response.statusText}`);
-            }
+            document.getElementById('bgModal').style.display = 'block';
         }
 
-        removeBgBtn.addEventListener('click', async () => {
-            const imageBlob = await fetch(previewImage.src)
-                .then(res => res.blob());
+        function closeBgModal() {
+            document.getElementById('bgModal').style.display = 'none';
+        }
 
-            try {
-                const rbgResultData = await removeBg(imageBlob);
+        function selectBackground(selectedBgUrl) {
+            const previewImage = document.getElementById('previewImage');
 
-                const imageUrl = URL.createObjectURL(new Blob([rbgResultData], { type: 'image/png' }));
+            changeBackgroundAPI(selectedBgUrl, previewImage.src);
+            closeBgModal();
+        }
 
-                previewImage.src = imageUrl;
-            } catch (error) {
-                console.error('Error removing background:', error);
-                alert('Failed to remove background');
+        async function changeBackgroundAPI(backgroundUrl, originalImageUrl) {
+            const imageBlob = await fetch(originalImageUrl)
+                .then(res => res.blob())
+                .catch(error => {
+                    console.error('Error fetching image blob:', error);
+                    return null;
+                });
+
+            if (!imageBlob) {
+                alert('Failed to fetch image blob');
+                return;
             }
-        });
+
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const base64String = reader.result.split(',')[1];
+                try {
+                    const response = await fetch('/change-bg', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            imageBlob: base64String,
+                            backgroundUrl: backgroundUrl
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const bufferData = new Uint8Array(data.rbgResultData.data);
+                        const imageUrl = URL.createObjectURL(new Blob([bufferData], { type: 'image/png' }));
+                        previewImage.src = imageUrl;
+                    } else {
+                        console.error('Failed to remove background:', data.error);
+                        alert('Failed to remove background');
+                    }
+                } catch (error) {
+                    console.error('Error removing background:', error);
+                    alert('Failed to remove background');
+                }
+            };
+            reader.readAsDataURL(imageBlob);
+        }
 
     </script>
 </body>
