@@ -12,6 +12,7 @@ const key = process.env.RBG_KEY || "6Lu6WfjPB2PVE7rw3tu3JaR2";
 app.set("view engine", 'ejs');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views/pages'));
+app.use('/src', express.static(path.join(__dirname, 'src')));
 
 app.get('/', (req, res) => {
     res.render("home")

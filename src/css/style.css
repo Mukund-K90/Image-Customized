@@ -1,0 +1,243 @@
+.container {
+    max-width: 70%;
+    margin: 0 auto;
+    padding: 20px;
+    height: auto;
+}
+
+.preview-container {
+    position: relative;
+    width: 100%;
+    background: #f5f5f5;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    background-image: url(https://omgs.in/wp-content/uploads/2021/02/wall-c.jpg);
+}
+
+.size-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.size-btn {
+    padding: 8px 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 15%;
+    height: 5%;
+}
+
+.size-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.image-container {
+    width: 600px;
+    height: 450px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eaeaea;
+    border: 2px solid #ccc;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.preview-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+
+
+.image-container.default::before {
+    content: '\f03e';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 36px;
+    color: #bbb;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+
+.shape-options {
+    margin-top: 5%;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+.shape-btn {
+    width: 30px;
+    height: 25px;
+    background: #C1995D;
+    border: none;
+    cursor: pointer;
+    box-shadow: 1px 1px 5px #808080;
+}
+
+.shape-btn.circle {
+    border-radius: 50%;
+    height: 30px;
+}
+
+.shape-btn.square {
+    border-radius: 0;
+}
+
+.shape-btn.rect {
+    border-radius: 5%;
+    height: 20px;
+}
+
+.shape-btn.oval {
+    border-radius: 50%;
+    height: 20px;
+}
+
+.border-colors {
+    right: 10px;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.color-btn {
+    width: 40px;
+    height: 20px;
+    font-size: 15px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+    align-items: center;
+}
+
+.upload-btn {
+    background: #FF5722;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.upload {
+    background: #DBDBDB;
+    font-size: 20px;
+    color: #000;
+}
+
+.upload:hover {
+    background: #000;
+    color: #f0f0f0;
+}
+
+.download {
+    background: #03A9F4;
+    font-size: 20px;
+    border: 1px solid #f0f0f0;
+}
+
+.download:hover {
+    background: #f0f0f0;
+    font-size: 20px;
+    color: #03A9F4;
+    border: 1px solid #03A9F4;
+}
+
+#fileInput {
+    display: none;
+}
+
+.size-indicator {
+    position: absolute;
+    background: black;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 10px;
+}
+
+.width-indicator {
+    top: -0px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.height-indicator {
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+}
+
+.circle-shape {
+    border-radius: 50%;
+    width: 400px;
+    height: 400px;
+}
+
+.square-shape {
+    height: 400px;
+    width: 400px;
+}
+
+.oval-shape {
+    border-radius: 50%;
+    height: 400px;
+    width: 500px;
+}
+
+.custom-shape {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    height: 400px;
+    width: 400px;
+}
+
+.rect-shape {
+    border-radius: 5%;
+    width: 500px;
+    height: 300px;
+}
+
+.shape-btn.active {
+    outline: 2px solid #03A9F4;
+}
+
+.size-btn.active {
+    background-color: #03A9F4;
+    font-weight: bold;
+    color: #f0f0f0;
+}
