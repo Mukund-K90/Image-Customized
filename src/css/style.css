@@ -33,6 +33,7 @@
     display: inline-block;
 
 }
+
 .shape-btn.hidden {
     display: none;
 }
@@ -57,7 +58,6 @@
 }
 
 .preview-image {
-    max-width: 100%;
     max-height: 100%;
     object-fit: fill;
 }
@@ -146,6 +146,7 @@
 }
 
 .download {
+    display: none;
     background: #03A9F4;
     font-size: 20px;
     border: 1px solid #f0f0f0;
@@ -235,18 +236,6 @@
     border-radius: 35% 0 35% 0;
 }
 
-.shape-btn.custom5 {
-    width: 30px;
-    height: 30px;
-    clip-path: polygon(45px 0,
-            calc(100% - 45px) 0,
-            100% 45px,
-            100% calc(100% - 45px),
-            calc(100% - 45px) 100%,
-            45px 100%,
-            0 calc(100% - 45px),
-            0 45px);
-}
 
 .circle-shape {
     border-radius: 50%;
@@ -293,19 +282,6 @@
     border-radius: 35% 0 35% 0;
     height: 400px;
     width: 350px;
-}
-
-.custom5-shape {
-    width: 400px;
-    height: 400px;
-    clip-path: polygon(35px 0,
-            calc(100% - 35px) 0,
-            100% 35px,
-            100% calc(100% - 35px),
-            calc(100% - 35px) 100%,
-            35px 100%,
-            0 calc(100% - 35px),
-            0 35px);
 }
 
 .rect-shape {

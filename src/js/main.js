@@ -37,6 +37,7 @@ fileInput.addEventListener('change', function (e) {
             previewImage.style.transform = 'translate(0px, 0px) scale(1)';
         };
         reader.readAsDataURL(file);
+        document.getElementById('downloadBtn').style.display = "block";
     }
 });
 
@@ -48,7 +49,7 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
         const shape = this.dataset.shape;
         const imageContainer = document.querySelector('.image-container');
 
-        imageContainer.classList.remove('circle-shape', 'square-shape', 'oval-shape', 'rect-shape', 'potrait-shape', 'custom-shape', 'custom2-shape', 'custom3-shape', 'custom4-shape', 'custom5-shape', 'custom6-shape');
+        imageContainer.classList.remove('circle-shape', 'square-shape', 'oval-shape', 'rect-shape', 'potrait-shape', 'custom-shape', 'custom2-shape', 'custom3-shape', 'custom4-shape');
 
         if (shape) {
             imageContainer.classList.add(`${shape}-shape`)
@@ -154,7 +155,7 @@ document.querySelectorAll('.size-btn').forEach(btn => {
         widthInd.innerText = `Width ${aspectWidth} inch (${aspectWidth * 2.54} cm)`;
         heightInd.innerText = `Height ${aspectHeight} inch (${aspectHeight * 2.54} cm)`;
 
-        document.querySelectorAll('.circle-shape, .square-shape, .oval-shape, .custom-shape, .rect-shape').forEach(shape => {
+        document.querySelectorAll('.circle-shape', '.square-shape', '.oval-shape', '.rect-shape', '.potrait-shape', '.custom-shape', '.custom2-shape', '.custom3-shape', '.custom4-shape').forEach(shape => {
             if (shape.classList.contains('circle-shape')) {
                 shape.style.width = `${Math.round(height)}px`;
                 shape.style.height = `${Math.round(height)}px`;
