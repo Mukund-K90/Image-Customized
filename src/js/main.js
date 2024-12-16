@@ -294,6 +294,7 @@ document.getElementById('addTextModalBtn').addEventListener('click', function ()
         textBox.style.top = '50%';
         textBox.style.left = '50%';
         textBox.style.transform = 'translate(-50%, -50%)';
+        textBox.style.cursor = "move";
         document.getElementById('imageContainer').appendChild(textBox);
         textBox.style.display = 'block';
         makeDraggable(textBox);
