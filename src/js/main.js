@@ -346,12 +346,9 @@ document.getElementById('addTextModalBtn').addEventListener('click', function ()
         textBox.style.left = '50%';
         textBox.style.transform = 'translate(-50%, -50%)';
         textBox.style.cursor = 'move';
-        textBox.style.border = 'none'; // No border by default
-
-        // Append text box to the image container
+        textBox.style.border = 'none';
         document.getElementById('imageContainer').appendChild(textBox);
 
-        // Make the text box draggable, resizable, and rotatable
         makeDraggable(textBox);
         makeResizable(textBox);
         makeRotatable(textBox);
@@ -370,7 +367,7 @@ function makeDraggable(element) {
         offsetY = e.clientY - element.offsetTop;
         element.style.cursor = 'grabbing';
 
-        element.style.border = '2px solid #248EE6';
+        element.style.border = '2px dashed #248EE6';
         element.querySelector('.resize-handle').style.display = 'block';
         element.querySelector('.rotate-handle').style.display = 'block';
     });
@@ -389,7 +386,7 @@ function makeDraggable(element) {
 
     document.addEventListener('mousedown', function (e) {
         if (!element.contains(e.target)) {
-            element.style.border = 'none'; 
+            element.style.border = 'none';
             element.querySelector('.resize-handle').style.display = 'none';
             element.querySelector('.rotate-handle').style.display = 'none';
         }
@@ -400,11 +397,11 @@ function makeResizable(element) {
     const resizeHandle = document.createElement('div');
     resizeHandle.className = 'resize-handle';
     resizeHandle.style.position = 'absolute';
-    resizeHandle.style.right = '-15px';
-    resizeHandle.style.bottom = '-15px';
+    resizeHandle.style.right = '-11.3px';
+    resizeHandle.style.bottom = '-6.5px';
     resizeHandle.style.fontSize = '24px';
-    resizeHandle.style.cursor = 'se-resize';
-    resizeHandle.innerText = '+'; 
+    resizeHandle.style.cursor = 'crosshair';
+    resizeHandle.innerText = '+';
     resizeHandle.style.display = 'none';
 
     element.appendChild(resizeHandle);
@@ -418,7 +415,6 @@ function makeResizable(element) {
             const newSize = initialWidth + (e.clientX - initialMouseX);
             element.style.fontSize = newSize + 'px';
         }
-
         function stopResizing() {
             document.removeEventListener('mousemove', resize);
             document.removeEventListener('mouseup', stopResizing);
@@ -433,13 +429,13 @@ function makeRotatable(element) {
     const rotateHandle = document.createElement('div');
     rotateHandle.className = 'rotate-handle';
     rotateHandle.style.position = 'absolute';
-    rotateHandle.style.top = '-20px';
+    rotateHandle.style.top = '-30px';
     rotateHandle.style.left = '50%';
     rotateHandle.style.transform = 'translateX(-50%)';
     rotateHandle.style.cursor = 'pointer';
     rotateHandle.style.fontSize = '24px';
-    rotateHandle.innerHTML = '&#8635;'; // Adding rotate arrow symbol
-    rotateHandle.style.display = 'none'; // Initially hidden
+    rotateHandle.innerHTML = '&#8635;';
+    rotateHandle.style.display = 'none';
 
     element.appendChild(rotateHandle);
 
