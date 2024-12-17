@@ -126,6 +126,9 @@ function updateImagePosition() {
 const downloadBtn = document.getElementById('downloadBtn');
 
 downloadBtn.addEventListener('click', () => {
+    document.querySelectorAll('.resize-handle, .rotate-handle').forEach(handle => {
+        handle.style.display = 'none';
+    });
     html2canvas(imageContainer, { backgroundColor: null }).then((canvas) => {
         const link = document.createElement('a');
         link.download = 'customized-image.png';
@@ -278,6 +281,53 @@ function closeTextModal() {
     document.getElementById('textModal').style.display = 'none';
 }
 
+// document.getElementById('addTextModalBtn').addEventListener('click', function () {
+//     const text = document.getElementById('modalTextInput').value;
+//     const textColor = document.getElementById('textColor').value;
+//     const fontStyle = document.getElementById('fontStyleSelect').value;
+
+//     if (text.trim() !== '') {
+//         const textBox = document.createElement('div');
+//         textBox.id = 'textBox';
+//         textBox.innerText = text;
+//         textBox.style.position = 'absolute';
+//         textBox.style.fontFamily = fontStyle;
+//         textBox.style.color = textColor;
+//         textBox.style.fontSize = '24px';
+//         textBox.style.top = '50%';
+//         textBox.style.left = '50%';
+//         textBox.style.transform = 'translate(-50%, -50%)';
+//         textBox.style.cursor = "move";
+//         document.getElementById('imageContainer').appendChild(textBox);
+//         textBox.style.display = 'block';
+//         makeDraggable(textBox);
+//     }
+
+//     closeTextModal();
+// });
+
+// function makeDraggable(element) {
+//     let isDragging = false;
+//     let offsetX, offsetY;
+
+//     element.addEventListener('mousedown', function (e) {
+//         isDragging = true;
+//         offsetX = e.clientX - element.offsetLeft;
+//         offsetY = e.clientY - element.offsetTop;
+//     });
+
+//     document.addEventListener('mousemove', function (e) {
+//         if (isDragging) {
+//             element.style.left = e.clientX - offsetX + 'px';
+//             element.style.top = e.clientY - offsetY + 'px';
+//         }
+//     });
+
+//     document.addEventListener('mouseup', function () {
+//         isDragging = false;
+//     });
+// }
+
 document.getElementById('addTextModalBtn').addEventListener('click', function () {
     const text = document.getElementById('modalTextInput').value;
     const textColor = document.getElementById('textColor').value;
@@ -285,8 +335,9 @@ document.getElementById('addTextModalBtn').addEventListener('click', function ()
 
     if (text.trim() !== '') {
         const textBox = document.createElement('div');
-        textBox.id = 'textBox';
+        textBox.className = 'text-box';
         textBox.innerText = text;
+
         textBox.style.position = 'absolute';
         textBox.style.fontFamily = fontStyle;
         textBox.style.color = textColor;
@@ -294,10 +345,16 @@ document.getElementById('addTextModalBtn').addEventListener('click', function ()
         textBox.style.top = '50%';
         textBox.style.left = '50%';
         textBox.style.transform = 'translate(-50%, -50%)';
-        textBox.style.cursor = "move";
+        textBox.style.cursor = 'move';
+        textBox.style.border = 'none'; // No border by default
+
+        // Append text box to the image container
         document.getElementById('imageContainer').appendChild(textBox);
-        textBox.style.display = 'block';
+
+        // Make the text box draggable, resizable, and rotatable
         makeDraggable(textBox);
+        makeResizable(textBox);
+        makeRotatable(textBox);
     }
 
     closeTextModal();
@@ -311,6 +368,11 @@ function makeDraggable(element) {
         isDragging = true;
         offsetX = e.clientX - element.offsetLeft;
         offsetY = e.clientY - element.offsetTop;
+        element.style.cursor = 'grabbing';
+
+        element.style.border = '2px solid #248EE6';
+        element.querySelector('.resize-handle').style.display = 'block';
+        element.querySelector('.rotate-handle').style.display = 'block';
     });
 
     document.addEventListener('mousemove', function (e) {
@@ -322,6 +384,85 @@ function makeDraggable(element) {
 
     document.addEventListener('mouseup', function () {
         isDragging = false;
+        element.style.cursor = 'move';
+    });
+
+    document.addEventListener('mousedown', function (e) {
+        if (!element.contains(e.target)) {
+            element.style.border = 'none'; 
+            element.querySelector('.resize-handle').style.display = 'none';
+            element.querySelector('.rotate-handle').style.display = 'none';
+        }
     });
 }
+
+function makeResizable(element) {
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'resize-handle';
+    resizeHandle.style.position = 'absolute';
+    resizeHandle.style.right = '-15px';
+    resizeHandle.style.bottom = '-15px';
+    resizeHandle.style.fontSize = '24px';
+    resizeHandle.style.cursor = 'se-resize';
+    resizeHandle.innerText = '+'; 
+    resizeHandle.style.display = 'none';
+
+    element.appendChild(resizeHandle);
+
+    resizeHandle.addEventListener('mousedown', function (e) {
+        e.stopPropagation();
+        const initialWidth = element.offsetWidth;
+        const initialMouseX = e.clientX;
+
+        function resize(e) {
+            const newSize = initialWidth + (e.clientX - initialMouseX);
+            element.style.fontSize = newSize + 'px';
+        }
+
+        function stopResizing() {
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResizing);
+        }
+
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopResizing);
+    });
+}
+
+function makeRotatable(element) {
+    const rotateHandle = document.createElement('div');
+    rotateHandle.className = 'rotate-handle';
+    rotateHandle.style.position = 'absolute';
+    rotateHandle.style.top = '-20px';
+    rotateHandle.style.left = '50%';
+    rotateHandle.style.transform = 'translateX(-50%)';
+    rotateHandle.style.cursor = 'pointer';
+    rotateHandle.style.fontSize = '24px';
+    rotateHandle.innerHTML = '&#8635;'; // Adding rotate arrow symbol
+    rotateHandle.style.display = 'none'; // Initially hidden
+
+    element.appendChild(rotateHandle);
+
+    rotateHandle.addEventListener('mousedown', function (e) {
+        e.stopPropagation();
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        function rotate(e) {
+            const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+            const degree = (angle * (180 / Math.PI) + 90) % 360;
+            element.style.transform = `translate(-50%, -50%) rotate(${degree}deg)`;
+        }
+
+        function stopRotating() {
+            document.removeEventListener('mousemove', rotate);
+            document.removeEventListener('mouseup', stopRotating);
+        }
+
+        document.addEventListener('mousemove', rotate);
+        document.addEventListener('mouseup', stopRotating);
+    });
+}
+
 

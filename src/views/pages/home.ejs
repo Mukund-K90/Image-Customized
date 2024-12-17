@@ -83,10 +83,13 @@
             <button class="size-btn" data-ratio="35/23">35x23</button>
             <button class="size-btn" data-ratio="48/36">48x36</button>
             <button class="upload-btn" id="removeBgBtn">Change Background</button>
-            <button class="upload-btn" id="addTextBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button class="upload-btn" id="addTextBtn"><i
+                    class="fa-solid fa-pen-to-square"></i></button>
 
         </div>
     </div>
+
+    <!-- ===BG MODAL=== -->
     <div id="bgModal"
         style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);">
         <div
@@ -98,6 +101,8 @@
             <button onclick="closeBgModal()">Close</button>
         </div>
     </div>
+
+    <!-- ===TEXT MODAL=== -->
     <div id="textModal"
         style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);">
         <div
@@ -116,14 +121,19 @@
                 <option value="Courier New">Courier New</option>
                 <option value="Verdana">Verdana</option>
                 <option value="cursive">cursive</option>
-                <option value="emoji">emoji</option>
                 <option value="fantasy">fantasy</option>
+                <option value="monospace">monospace</option>
+                <option value="Lucida Console">Lucida Console</option>
+                <option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
+                <option value="Impact">Impact</option>
+                <option value="Georgia">Georgia</option>
             </select>
 
             <button id="addTextModalBtn">Add Text</button>
             <button onclick="closeTextModal()">Cancel</button>
         </div>
     </div>
+    
 </body>
 
 </html>
