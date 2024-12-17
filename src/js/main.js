@@ -12,7 +12,9 @@ const backgroundUrls = [
     "https://i.pinimg.com/736x/d0/09/52/d00952ba351f7b7f0905a4a9465b6fc8.jpg",
     "https://i.pinimg.com/736x/33/92/a6/3392a60bb7a4c4ec72f8bef181a9f556.jpg"
 ];
-const imageContainer = document.getElementById('imageContainer');
+const imageContainer = document.querySelector('.image-container');
+console.log(imageContainer);
+
 const previewImage = document.getElementById('previewImage');
 const fileInput = document.getElementById('fileInput');
 const widthInd = document.getElementById('width');
@@ -139,25 +141,42 @@ document.querySelectorAll('.size-btn').forEach(btn => {
         this.classList.add('active');
 
         const ratio = this.dataset.ratio.split('/');
-        const aspectWidth = parseFloat(ratio[0]);
-        const aspectHeight = parseFloat(ratio[1]);
+        const aspectWidth = ratio[0];
+        const aspectHeight = ratio[1];
 
-        let width = 400;
-        let height = (400 * aspectHeight) / aspectWidth;
+        let width = 500;
+        let height = (450 * aspectHeight) / aspectWidth;
 
-        const imageContainer = document.querySelector('.image-container');
         const widthInd = document.getElementById('width');
         const heightInd = document.getElementById('height');
 
-        imageContainer.style.width = `${Math.round(width)}px`;
-        imageContainer.style.height = `${Math.round(height)}px`;
-        widthInd.innerText = `Width ${aspectWidth} inch (${aspectWidth * 2.54} cm)`;
-        heightInd.innerText = `Height ${aspectHeight} inch (${aspectHeight * 2.54} cm)`;
+        console.log(ratio);
 
+        console.log(aspectWidth, aspectHeight);
+
+        if (aspectWidth === "default" && aspectHeight === "default") {
+            imageContainer.style.width = '';
+            imageContainer.style.height = '';
+            widthInd.innerText = `Width 12 inch (30.48 cm)`;
+            heightInd.innerText = `Height 9 inch (22.86 cm)`;
+        }
+        else {
+            imageContainer.style.width = `${Math.round(width)}px`;
+            imageContainer.style.height = `${Math.round(height)}px`;
+            widthInd.innerText = `Width ${aspectWidth} inch (${aspectWidth * 2.54} cm)`;
+            heightInd.innerText = `Height ${aspectHeight} inch (${aspectHeight * 2.54} cm)`;
+        }
         document.querySelectorAll('.circle-shape', '.square-shape', '.oval-shape', '.rect-shape', '.potrait-shape', '.custom-shape', '.custom2-shape', '.custom3-shape', '.custom4-shape').forEach(shape => {
             if (shape.classList.contains('circle-shape')) {
+                console.log("square-shape");
+
                 shape.style.width = `${Math.round(height)}px`;
                 shape.style.height = `${Math.round(height)}px`;
+            } else if (shape.classList.contains('square-shape')) {
+                console.log("square-shape");
+                
+                shape.style.width = `${Math.round(width)}px`;
+                shape.style.height = `${Math.round(width)}px`;
             } else if (shape.classList.contains('rect-shape')) {
                 shape.style.width = `${Math.round(width)}px`;
                 shape.style.height = `${Math.round(width) - 100}px`;
@@ -167,19 +186,26 @@ document.querySelectorAll('.size-btn').forEach(btn => {
             }
         });
 
-        if (aspectWidth === 11 && aspectHeight === 11 || aspectWidth === 16 && aspectHeight === 16) {
+        if ((aspectWidth == 11 && aspectHeight == 11) || (aspectWidth == 16 && aspectHeight == 16)) {
             document.querySelectorAll('.shape-btn').forEach(button => {
-                if (button.classList.contains('oval') || button.classList.contains('rect') || button.classList.contains('potrait')) {
+                if (button.classList.contains('oval') || button.classList.contains('potrait')) {
                     button.style.display = 'none';
                 } else {
                     button.style.display = 'inline-block';
                 }
             });
-        } else {
+        }
+        else if (aspectWidth === "default" && aspectHeight === "default") {
+            document.querySelectorAll('.shape-btn').forEach(button => {
+                button.style.display = 'inline-block';
+            });
+        }
+        else {
             document.querySelectorAll('.shape-btn').forEach(button => {
                 if (button.classList.contains('potrait') || button.classList.contains('rect') || button.classList.contains('circle') || button.classList.contains('custom3') || button.classList.contains('custom4') || button.classList.contains('custom5')) {
-                    button.style.display = 'none';
-                } else {
+                    button.style.display = 'none';                    
+                }
+                else {
                     button.style.display = 'inline-block';
                 }
             });

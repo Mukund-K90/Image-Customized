@@ -46,17 +46,17 @@ body {
 }
 
 .image-container {
-    width: 600px;
-    height: 450px;
+    width: 500px;
+    height: 400px;
     position: relative;
     aspect-ratio: 12/9;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 0;
+    border-radius: 5%;
     overflow: hidden;
     backdrop-filter: blur(5px);
-    background:transparent; 
+    background: transparent;
 }
 
 .preview-image {
@@ -173,7 +173,7 @@ body {
 
 .width-indicator {
     top: -0px;
-    left: 50%;
+    left: 40%;
     transform: translateX(-50%);
 }
 
