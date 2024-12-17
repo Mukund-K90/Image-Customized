@@ -1,11 +1,11 @@
 body {
     user-select: none;
+    overflow: hidden;
 }
 
 .container {
     max-width: 70%;
     margin: 0 auto;
-    padding: 20px;
     height: auto;
 }
 
