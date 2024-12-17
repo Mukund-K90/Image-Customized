@@ -41,7 +41,6 @@ fileInput.addEventListener('change', function (e) {
     }
 });
 
-
 document.querySelectorAll('.shape-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         document.querySelectorAll('.shape-btn').forEach(button => button.classList.remove('active'));
@@ -119,9 +118,6 @@ zoomRange.addEventListener('input', function () {
     updateImagePosition();
 });
 
-function updateImagePosition() {
-    previewImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
-}
 
 const downloadBtn = document.getElementById('downloadBtn');
 
