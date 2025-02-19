@@ -14,28 +14,21 @@ const backgroundUrls = [
 ];
 
 const imageContainer = document.querySelector('.image-container');
-
 const previewImage = document.getElementById('previewImage');
 const fileInput = document.getElementById('fileInput');
 const widthInd = document.getElementById('width');
 const heightInd = document.getElementById('height');
-
 const downloadBtn = document.getElementById('downloadBtn');
 const shareBtn = document.getElementById('shareBtn');
-
 imageContainer.addEventListener('dblclick', dragStart);
 imageContainer.addEventListener('mousemove', drag);
 document.addEventListener('mouseup', dragEnd);
-
 const zoomRange = document.getElementById('zoomRange');
 let scale = 1;
-
 const removeBgBtn = document.getElementById('removeBgBtn');
 removeBgBtn.addEventListener('click', openBgModal);
-
 const allTextData = [];
 let file;
-
 let isDragging = false;
 let currentX = 0;
 let currentY = 0;
@@ -468,7 +461,6 @@ document.getElementById('shareBtn').addEventListener('click', () => {
             ? selectedSize.dataset.ratio
             : "default",
         addedText: textElement ? allTextData : [],
-        effects: []
     };
 
     console.log(JSON.stringify(imageDetails, null, 2));
