@@ -14,13 +14,27 @@ const backgroundUrls = [
 ];
 
 const imageContainer = document.querySelector('.image-container');
-console.log(imageContainer);
 
 const previewImage = document.getElementById('previewImage');
 const fileInput = document.getElementById('fileInput');
 const widthInd = document.getElementById('width');
 const heightInd = document.getElementById('height');
 
+const downloadBtn = document.getElementById('downloadBtn');
+const shareBtn = document.getElementById('shareBtn');
+
+imageContainer.addEventListener('dblclick', dragStart);
+imageContainer.addEventListener('mousemove', drag);
+document.addEventListener('mouseup', dragEnd);
+
+const zoomRange = document.getElementById('zoomRange');
+let scale = 1;
+
+const removeBgBtn = document.getElementById('removeBgBtn');
+removeBgBtn.addEventListener('click', openBgModal);
+
+const allTextData = [];
+let file;
 
 let isDragging = false;
 let currentX = 0;
@@ -31,7 +45,7 @@ let xOffset = 0;
 let yOffset = 0;
 
 fileInput.addEventListener('change', function (e) {
-    const file = e.target.files[0];
+    file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -40,7 +54,8 @@ fileInput.addEventListener('change', function (e) {
             previewImage.style.transform = 'translate(0px, 0px) scale(1)';
         };
         reader.readAsDataURL(file);
-        document.getElementById('downloadBtn').style.display = "block";
+        downloadBtn.style.display = "block";
+        shareBtn.style.display = "block";
     }
 });
 
@@ -65,10 +80,6 @@ document.querySelectorAll('.color-btn').forEach(btn => {
         imageContainer.style.border = `${this.style.border}`;
     });
 });
-
-imageContainer.addEventListener('dblclick', dragStart);
-imageContainer.addEventListener('mousemove', drag);
-document.addEventListener('mouseup', dragEnd);
 
 function dragStart(e) {
     if (!isDragging) {
@@ -113,16 +124,10 @@ function updateImagePosition() {
     previewImage.style.transform = `translate(${currentX}px, ${currentY}px) scale(${scale})`;
 }
 
-const zoomRange = document.getElementById('zoomRange');
-let scale = 1;
-
 zoomRange.addEventListener('input', function () {
     scale = parseFloat(zoomRange.value);
     updateImagePosition();
 });
-
-
-const downloadBtn = document.getElementById('downloadBtn');
 
 downloadBtn.addEventListener('click', () => {
     document.querySelectorAll('.resize-handle, .rotate-handle').forEach(handle => {
@@ -214,10 +219,6 @@ document.querySelectorAll('.size-btn').forEach(btn => {
     });
 });
 
-
-const removeBgBtn = document.getElementById('removeBgBtn');
-removeBgBtn.addEventListener('click', openBgModal);
-
 function openBgModal() {
     const bgGallery = document.getElementById('bgGallery');
     bgGallery.innerHTML = '';
@@ -295,7 +296,6 @@ async function changeBackgroundAPI(backgroundUrl, originalImageUrl) {
     reader.readAsDataURL(imageBlob);
 }
 
-
 document.getElementById('addTextBtn').addEventListener('click', function () {
     document.getElementById('textModal').style.display = 'block';
 });
@@ -325,6 +325,11 @@ document.getElementById('addTextModalBtn').addEventListener('click', function ()
         textBox.style.border = 'none';
         document.getElementById('imageContainer').appendChild(textBox);
 
+        allTextData.push({
+            text: text,
+            color: textColor,
+            style: fontStyle,
+        });
         makeDraggable(textBox);
         makeResizable(textBox);
         makeRotatable(textBox);
@@ -436,3 +441,35 @@ function makeRotatable(element) {
         document.addEventListener('mouseup', stopRotating);
     });
 }
+
+// ==========================================
+document.getElementById('shareBtn').addEventListener('click', () => {
+    const imageContainer = document.getElementById('imageContainer');
+    const selectedBorder = document.querySelector('.color-btn.active');
+    const selectedShape = document.querySelector('.shape-btn.active');
+    const selectedSize = document.querySelector('.size-btn.active');
+    const textElement = document.querySelector('.text-box');
+    console.log(imageContainer);
+
+    const imageDetails = {
+        image: {
+            name: file.name,
+            lastModified: file.lastModified,
+            lastModifiedDate: file.lastModifiedDate.toString(),
+            size: file.size,
+            type: file.type,
+            webkitRelativePath: file.webkitRelativePath
+        },
+        width: imageContainer.offsetWidth + 'px',
+        height: imageContainer.offsetHeight + 'px',
+        border: imageContainer ? imageContainer.style.border : 'none',
+        shape: selectedShape ? selectedShape.dataset.shape : 'default',
+        size: selectedSize && selectedSize.dataset.ratio !== "default/default"
+            ? selectedSize.dataset.ratio
+            : "default",
+        addedText: textElement ? allTextData : [],
+        effects: []
+    };
+
+    console.log(JSON.stringify(imageDetails, null, 2));
+});

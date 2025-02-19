@@ -151,6 +151,13 @@ body {
     border: 1px solid #f0f0f0;
 }
 
+.share{
+    display: none;
+    background: #012e43;
+    font-size: 20px;
+    border: 1px solid #f0f0f0;
+}
+
 .download:hover {
     background: #f0f0f0;
     font-size: 20px;
