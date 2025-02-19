@@ -12,6 +12,7 @@ const backgroundUrls = [
     "https://i.pinimg.com/736x/d0/09/52/d00952ba351f7b7f0905a4a9465b6fc8.jpg",
     "https://i.pinimg.com/736x/33/92/a6/3392a60bb7a4c4ec72f8bef181a9f556.jpg"
 ];
+
 const imageContainer = document.querySelector('.image-container');
 console.log(imageContainer);
 
@@ -174,7 +175,7 @@ document.querySelectorAll('.size-btn').forEach(btn => {
                 shape.style.height = `${Math.round(height)}px`;
             } else if (shape.classList.contains('square-shape')) {
                 console.log("square-shape");
-                
+
                 shape.style.width = `${Math.round(width)}px`;
                 shape.style.height = `${Math.round(width)}px`;
             } else if (shape.classList.contains('rect-shape')) {
@@ -203,7 +204,7 @@ document.querySelectorAll('.size-btn').forEach(btn => {
         else {
             document.querySelectorAll('.shape-btn').forEach(button => {
                 if (button.classList.contains('potrait') || button.classList.contains('rect') || button.classList.contains('circle') || button.classList.contains('custom3') || button.classList.contains('custom4') || button.classList.contains('custom5')) {
-                    button.style.display = 'none';                    
+                    button.style.display = 'none';
                 }
                 else {
                     button.style.display = 'inline-block';
@@ -302,53 +303,6 @@ document.getElementById('addTextBtn').addEventListener('click', function () {
 function closeTextModal() {
     document.getElementById('textModal').style.display = 'none';
 }
-
-// document.getElementById('addTextModalBtn').addEventListener('click', function () {
-//     const text = document.getElementById('modalTextInput').value;
-//     const textColor = document.getElementById('textColor').value;
-//     const fontStyle = document.getElementById('fontStyleSelect').value;
-
-//     if (text.trim() !== '') {
-//         const textBox = document.createElement('div');
-//         textBox.id = 'textBox';
-//         textBox.innerText = text;
-//         textBox.style.position = 'absolute';
-//         textBox.style.fontFamily = fontStyle;
-//         textBox.style.color = textColor;
-//         textBox.style.fontSize = '24px';
-//         textBox.style.top = '50%';
-//         textBox.style.left = '50%';
-//         textBox.style.transform = 'translate(-50%, -50%)';
-//         textBox.style.cursor = "move";
-//         document.getElementById('imageContainer').appendChild(textBox);
-//         textBox.style.display = 'block';
-//         makeDraggable(textBox);
-//     }
-
-//     closeTextModal();
-// });
-
-// function makeDraggable(element) {
-//     let isDragging = false;
-//     let offsetX, offsetY;
-
-//     element.addEventListener('mousedown', function (e) {
-//         isDragging = true;
-//         offsetX = e.clientX - element.offsetLeft;
-//         offsetY = e.clientY - element.offsetTop;
-//     });
-
-//     document.addEventListener('mousemove', function (e) {
-//         if (isDragging) {
-//             element.style.left = e.clientX - offsetX + 'px';
-//             element.style.top = e.clientY - offsetY + 'px';
-//         }
-//     });
-
-//     document.addEventListener('mouseup', function () {
-//         isDragging = false;
-//     });
-// }
 
 document.getElementById('addTextModalBtn').addEventListener('click', function () {
     const text = document.getElementById('modalTextInput').value;
@@ -482,5 +436,3 @@ function makeRotatable(element) {
         document.addEventListener('mouseup', stopRotating);
     });
 }
-
-
