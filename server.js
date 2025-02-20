@@ -4,10 +4,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const PORT = 1818;
 const multer = require('multer');
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 const dotenv = require('dotenv');
 dotenv.config();
 const key = process.env.RBG_KEY || "6Lu6WfjPB2PVE7rw3tu3JaR2";
+const nodemailer = require('nodemailer');
 
 app.set("view engine", 'ejs');
 app.set('view engine', 'ejs');
@@ -40,6 +41,7 @@ async function removeBg(imageBlob, backgroundUrl) {
     }
 }
 
+//change bg 
 app.post('/change-bg', async (req, res) => {
     try {
         const { imageBlob, backgroundUrl } = req.body;
@@ -62,4 +64,34 @@ app.post('/change-bg', async (req, res) => {
         });
     }
 });
+
+//send email
+app.post('/send-email', upload.single('image'), async (req, res) => {
+    try {
+        const imageDetails = JSON.parse(req.body.details);
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user:  process.env.EMAIL,
+                pass:  process.env.PASSWORD
+            }
+        });
+        const mailOptions = {
+            to: 'koladiyamukund58@gmail.com',
+            subject: 'OMGS Acrylic Photo',
+            text: `image details:\n\n${JSON.stringify(imageDetails, null, 2)}`,
+            attachments: [{
+                filename: req.file.originalname,
+                content: req.file.buffer
+            }]
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.json({ success: true, message: 'File Shared Successully!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to send email' });
+    }
+});
+
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`))

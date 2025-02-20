@@ -382,13 +382,18 @@ function makeResizable(element) {
 
     resizeHandle.addEventListener('mousedown', function (e) {
         e.stopPropagation();
-        const initialWidth = element.offsetWidth;
+        const initialFontSize = parseFloat(window.getComputedStyle(element).fontSize); // Get current font size
         const initialMouseX = e.clientX;
 
         function resize(e) {
-            const newSize = initialWidth + (e.clientX - initialMouseX);
-            element.style.fontSize = newSize + 'px';
+            const scaleFactor = 0.2; // Adjust for smoother resizing
+            const newSize = initialFontSize + (e.clientX - initialMouseX) * scaleFactor;
+
+            if (newSize > 10) { // Prevent text from getting too small
+                element.style.fontSize = newSize + 'px';
+            }
         }
+
         function stopResizing() {
             document.removeEventListener('mousemove', resize);
             document.removeEventListener('mouseup', stopResizing);
@@ -398,6 +403,7 @@ function makeResizable(element) {
         document.addEventListener('mouseup', stopResizing);
     });
 }
+
 
 function makeRotatable(element) {
     const rotateHandle = document.createElement('div');
@@ -436,7 +442,7 @@ function makeRotatable(element) {
 }
 
 // ==========================================
-document.getElementById('shareBtn').addEventListener('click', () => {
+function getImageDetails() {
     const imageContainer = document.getElementById('imageContainer');
     const selectedBorder = document.querySelector('.color-btn.active');
     const selectedShape = document.querySelector('.shape-btn.active');
@@ -463,5 +469,37 @@ document.getElementById('shareBtn').addEventListener('click', () => {
         addedText: textElement ? allTextData : [],
     };
 
-    console.log(JSON.stringify(imageDetails, null, 2));
+    return imageDetails;
+};
+
+document.getElementById('shareBtn').addEventListener('click', () => {
+    document.querySelectorAll('.resize-handle, .rotate-handle').forEach(handle => {
+        handle.style.display = 'none';
+    });
+
+    html2canvas(imageContainer, { backgroundColor: null }).then((canvas) => {
+        canvas.toBlob((blob) => {
+            const formData = new FormData();
+            const now = new Date();
+            const formattedDate = now.toISOString().replace(/:/g, '-').split('.')[0]; // Format: YYYY-MM-DDTHH-MM-SS
+            const fileName = `customized-image-${formattedDate}.png`;
+
+            const imageData = getImageDetails();
+            formData.append('image', blob, fileName);
+            formData.append('details', JSON.stringify(imageData));
+
+            fetch('/send-email', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    alert('Error: ' + error.message);
+                });
+        });
+        shareBtn.style.display="none";
+    });
 });
