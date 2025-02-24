@@ -382,14 +382,14 @@ function makeResizable(element) {
 
     resizeHandle.addEventListener('mousedown', function (e) {
         e.stopPropagation();
-        const initialFontSize = parseFloat(window.getComputedStyle(element).fontSize); // Get current font size
+        const initialFontSize = parseFloat(window.getComputedStyle(element).fontSize); 
         const initialMouseX = e.clientX;
 
         function resize(e) {
-            const scaleFactor = 0.2; // Adjust for smoother resizing
+            const scaleFactor = 0.2; 
             const newSize = initialFontSize + (e.clientX - initialMouseX) * scaleFactor;
 
-            if (newSize > 10) { // Prevent text from getting too small
+            if (newSize > 10) { 
                 element.style.fontSize = newSize + 'px';
             }
         }
@@ -403,7 +403,6 @@ function makeResizable(element) {
         document.addEventListener('mouseup', stopResizing);
     });
 }
-
 
 function makeRotatable(element) {
     const rotateHandle = document.createElement('div');
@@ -473,6 +472,10 @@ function getImageDetails() {
 };
 
 document.getElementById('shareBtn').addEventListener('click', () => {
+    const shareBtn = document.getElementById('shareBtn');
+    shareBtn.disabled = true;
+    shareBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
+
     document.querySelectorAll('.resize-handle, .rotate-handle').forEach(handle => {
         handle.style.display = 'none';
     });
@@ -492,14 +495,17 @@ document.getElementById('shareBtn').addEventListener('click', () => {
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(error => {
-                    alert('Error: ' + error.message);
-                });
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                shareBtn.disabled = false;
+                shareBtn.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; 
+            });
         });
-        shareBtn.style.display="none";
     });
 });
